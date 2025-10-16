@@ -1,32 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Restaurante</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-</head>
-<body>
-    <div class="navBar">
-        <span>(logo)</span>
-        <span>(ínicio)</span>
-        <span>(Contato)</span>
-        <span class="social-media-container">
-            <span class="social-media" id="instagram">#</span>
-            <span class="social-media" id="facebook">#</span>
-        </span>
-        
+  </head>
+  <body>
+    <div div class="navBar">
+      <span class="navBar-links">Início</span>
+      <span><img id="logo" src="source/logo.png" alt="logo" /></span>
+      <span class="navBar-links">Contato</span>
     </div>
-    <div class="container">
-        <h1>Bem-vindo ao Restaurante</h1>
+
+    <div class="buy-container">
+      <span class="cart-title">Carrinho</span>
+
+      <span id="cart-subtitle">Itens</span>
+      <div class="cart-items">
+        <div class="cart-product-layout">
+          <div class="product-info">
+            <span class="cart-product-name">X-Tudinho</span>
+            <span class="cart-product-price">R$ 2,00</span>
+          </div>
+
+          <div class="product-controls">
+            <button class="control-btn remove-qty">-</button>
+            <span class="cart-product-qty">2</span>
+            <button class="control-btn add-qty">+</button>
+            <button class="control-btn remove-item">x</button>
+          </div>
+        </div>
+      </div>
+      <div class="order-price">
+        <div class="order-line">
+          <span id="cart-subtotal" class="secondary-final-lable">Subtotal</span
+          ><span class="secondary-final-price"> R$ 4,00</span>
+        </div>
+        <div class="order-line">
+          <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
+          <span class="secondary-final-price"> R$ 4,00</span>
+        </div>
+        <div class="order-line">
+          <span id="cart-total" class="final-price">Total </span
+          ><span class="secondary-final-price final-price" s>R$ 4,00</span>
+        </div>
+      </div>
+      <span class="finish-button-container">
+        <span class="cart-finish-button"
+          >Finalizar<img
+            class="cart-finish-wpp-logo"
+            src="source/whatsapp-logo-branca.png"
+        /></span>
+        <button class="add-more-items-btn">Adicionar mais itens</button>
+      </span>
+      <span class="final-advice"
+        >Ao ser redirecionado para o whatsapp, apenas envie a mensagem já
+        escrita.</span
+      >
+    </div>
+    <!--<div class="menu-container">
         <div>
             <span class="class-span">
                 <span class="class-title">Premium</span>
                 <span class="product-line">
                     <span class="product">
                         <span><img class="product-image" src="/source/hamburger.png" alt=""></span>
-                        <span>Egg x bacon</span>
+                        <span class="product-name">Egg x bacon</span>
+                        <span class="product-price">R$ 30,00</span>
                         <span><button class="addToCart-button" product="1">Adicionar ao carrinho</button></span>
                     </span>
                     <span class="product">
@@ -58,7 +100,7 @@
                     </span>
                 </span>
             </span>
-            <!-- <span class="class-span">
+            <span class="class-span">
                 <span class="class-title">(classe)</span>
                 <span class="product-line">
                     <span>(produto)</span>
@@ -83,9 +125,8 @@
                     <span>(produto)</span>
                     <span>(produto)</span>
                 </span>
-            </span> -->
+            </span>
             
-        </div>
-
-</body>
+        </div> -->
+  </body>
 </html>

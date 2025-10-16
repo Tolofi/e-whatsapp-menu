@@ -1,5 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
   font-family: "Roboto Condensed", sans-serif;
@@ -12,19 +19,27 @@ body {
 .class-span {
   display: flex;
   flex-direction: column;
+  margin: 2%;
 }
 
 .product {
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border: solid 1px black;
-  width: 10%;
+  justify-content: space-between;
+  padding: 25px;
+  border-radius: 20px;
+  width: 20%;
   text-align: center;
   align-items: center;
   font-size: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+@media (max-width: 768px) {
+  .product {
+    width: 70%;
+  }
+}
 .product-line {
   display: flex;
   flex-direction: row;
@@ -32,6 +47,7 @@ body {
   margin-bottom: 20px;
   text-align: center;
   justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 .product-image {
@@ -41,9 +57,18 @@ body {
 }
 
 .class-title {
-  font-size: 40px;
+  font-size: 55px;
   text-align: center;
-  text-decoration: underline;
+  margin: 2%;
+  font-family: "Arvo", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@media (max-width: 768px) {
+  .class-title {
+    font-size: 40px;
+  }
 }
 
 .addToCart-button {
@@ -53,19 +78,257 @@ body {
   font-style: normal;
   font-size: 20px;
   border: none;
-  border-radius: 20px;
-  background-color: red;
+  border-radius: 10px;
+  background-color: #e01919;
   padding: 10px;
+  color: white;
 }
 
 .social-media-container {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .navBar {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  padding: 10px;
+  background-color: #e01919;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#logo {
+  height: 80px;
+  width: auto;
+}
+
+.navBar-links {
+  color: white;
+  font-size: 25px;
+}
+
+@media (max-width: 768px) {
+  .navBar {
+    font-size: 20px;
+  }
+}
+.navBar-links {
+  color: white;
+  font-size: 20px;
+}
+
+.product-price {
+  font-size: 20px;
+  font-weight: 200;
+  color: #333;
+  text-align: left;
+}
+
+.product-name {
+  font-size: 25px;
+  text-align: left;
+}
+
+.buy-container {
+  display: flex;
+  flex-direction: column;
+  margin: 10%;
+  text-align: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 5% 2%;
+  border-radius: 10px;
+}
+
+.cart-title {
+  font-size: 40px;
+  text-align: center;
+  margin-bottom: 2%; /* Ajustado para espaçamento inferior */
+  font-family: "Arvo", serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+#cart-subtitle {
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 2%; /* Ajustado para espaçamento inferior */
+  font-family: "Arvo", serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.cart-items {
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Container da linha do produto */
+.cart-product-layout {
+  display: flex;
+  justify-content: space-between; /* Empurra info para a esquerda e controles para a direita */
+  align-items: center; /* <<< ALINHA TUDO NA VERTICAL PERFEITAMENTE */
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+/* Container das informações (nome, preço) */
+.product-info {
+   flex: 1;
+   min-width: 0;
+  /* Não precisa de muito estilo aqui, o flex do pai já o posiciona */
+}
+.cart-product-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  word-wrap: break-word;
+}
+.cart-product-price {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Container de TODOS os controles */
+.product-controls {
+  display: flex;
+  align-items: center; /* Alinha os botões e o número entre si */
+  gap: 5px; /* Espaçamento entre os controles */
+}
+
+/* Estilo COMUM para TODOS os botões de controle */
+.control-btn {
+  /* A MÁGICA DA CENTRALIZAÇÃO DO SÍMBOLO INTERNO */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border: none;
+  border-radius: 50%; /* Deixa redondinho */
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+/* Estilos específicos para cada botão */
+.add-qty,
+.remove-qty {
+  background-color: #f0f0f0;
+  color: #333;
+}
+.add-qty:hover,
+.remove-qty:hover {
+  background-color: #e0e0e0;
+}
+
+.remove-item {
+  background-color: #dc3545; /* Vermelho para remover */
+  color: white;
+}
+.remove-item:hover {
+  background-color: #c82333;
+}
+
+/* Estilo do número da quantidade */
+.cart-product-qty {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  min-width: 25px; /* Garante um espaço mínimo para o número */
+  text-align: center;
+}
+
+.cart-finish-button {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  background-color: #25d366;
+  border-radius: 10px;
+  align-items: center;
+  width: 60%;
+  color: white;
+  font-weight: 400;
+}
+
+.cart-finish-wpp-logo {
+  height: 80%;
+  width: auto;
+}
+
+.finish-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 3%;
+  align-items: center;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-remove-item {
+  text-align: center;
+  background-color: #c82333;
+  padding: 1%;
+  width: 8%;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.secondary-final-price {
+  font-size: 20px;
+  text-align: right;
+}
+
+.final-price {
+  font-size: 25px;
+  font-weight: bold;
+  color: #333333;
+}
+
+.secondary-final-lable {
+  font-size: 20px;
+  text-align: left;
+}
+
+.order-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-line {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.final-advice {
+  font-size: 10px;
+  margin-top: 2%;
+}
+
+.add-more-items-btn {
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 10px;
+  align-items: center;
+  width: 60%;
+  color: #555555;
+  font-weight: 400;
+  border: #e0e0e0 2px solid;
+  margin-top: 2%;
+  padding-inline: 10px;
 }
