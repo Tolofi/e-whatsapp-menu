@@ -1,18 +1,30 @@
 import { produtosPorCategoria } from "./data.js";
 
 const frete = 4;
+let change = 0;
+let precoGeral = 0;
+let paymentSelected = "";
+let orderResumeMessage = "";
 
 let $buyCart = $(".buy-container");
 let $menuContainer = $(".menu-container");
 let $alertBox = $(".alert");
 let $cartButton = $(".cart-float-button");
+let $backCartButton = $(".back-cart-float-button");
 let cart = [];
 let $inicio = $("#inicio");
 let $cartItemsContainer = $(".cart-items");
+let $cartFinishButton = $(".cart-finish-button");
 let $addMoreitems = $(".add-more-items-btn");
 let $removeQty = $(".remove-qty");
 let $addQty = $(".add-qty");
 let $removeItem = $(".remove-item");
+let $money = $("#money");
+let $card = $("#card");
+let $moneyChangeMessage = $(".money-change-message");
+let $moneyChangeConfirmation = $("#money-change-confirm-btn");
+let $moneyChangeConfirmationNegative = $("#money-change-confirm-btn-negative");
+let $moneyChangeValue = $("#money-change-input");
 
 $(document).ready(fillMenu(produtosPorCategoria));
 function setUpProductCard(imagem, nome, preco, id, descricao) {
@@ -108,10 +120,14 @@ function fillMenu(produtosPorCategoria) {
 function showCart() {
   $buyCart.css("display", "flex");
   $menuContainer.hide();
+  $cartButton.hide();
+  $backCartButton.css("display", "flex");
 }
 function showMenu() {
   $menuContainer.css("display", "block");
   $buyCart.hide();
+  $cartButton.css("display", "flex");
+  $backCartButton.hide();
 }
 
 // Cart logic
@@ -190,10 +206,14 @@ function listeners() {
     if (cart.length > 0) return;
     $cartItemsContainer.empty();
     $cartItemsContainer.text("O carrinho está vazio. Adicione alguns itens!");
+    console.log("Carrinho vazio.");
   });
 
   $inicio.on("click", function () {
     showMenu();
+    $buyCart.css("filter", "none");
+    $buyCart.css("pointer-events", "auto");
+    $moneyChangeMessage.hide();
   });
   $addMoreitems.on("click", function () {
     showMenu();
@@ -227,11 +247,105 @@ function listeners() {
     updateCartPriceState(); // Atualiza o preço total após a remoção
     console.log("Remover Item - ID:", id);
   });
-
+  let clicked = false;
   $menuContainer.on("click", ".product-information-btn", function () {
+    clicked = !clicked;
     $(this).prev().toggle();
+    $(this).text(clicked ? "Menos informações" : "Mais informações");
+    console.log(clicked);
   });
 
+  $backCartButton.on("click", function () {
+    showMenu();
+  });
+
+  let cardClicked = false;
+  let moneyClicked = false;
+  let paymentSelected = "";
+  $money.on("click", function () {
+    cardClicked = false;
+    moneyClicked = !moneyClicked;
+    if (moneyClicked) {
+      $money.css("opacity", "1");
+      $card.css("opacity", "0.5");
+    }
+    paymentSelected = "money";
+    console.log(paymentSelected);
+    $moneyChangeMessage.css("display", "flex");
+    $buyCart.css("filter", "blur(5px)");
+    $buyCart.css("pointer-events", "none");
+  });
+
+  $card.on("click", function () {
+    moneyClicked = false;
+    cardClicked = !cardClicked;
+    if (cardClicked) {
+      $card.css("opacity", "1");
+      $money.css("opacity", "0.5");
+    }
+    paymentSelected = "card";
+    console.log(paymentSelected);
+  });
+
+  $moneyChangeConfirmation.on("click", function () {
+    console.log("a");
+    if (
+      $moneyChangeValue.val() == "") {
+      $moneyChangeValue.css("border", "1px solid red");
+      paymentSelected = "";
+      $card.css("opacity", "1");
+      $money.css("opacity", "1");
+    } else if (!precoGeral) {
+      $moneyChangeValue.css("border", "1px solid red");
+      $moneyChangeValue.val("");
+      $moneyChangeValue.attr("placeholder", "Adicione um produto antes.");
+      paymentSelected = "";
+      $card.css("opacity", "1");
+      $money.css("opacity", "1");
+    } else if (parseFloat($moneyChangeValue.val()) <= precoGeral) {
+      $moneyChangeValue.css("border", "1px solid red");
+      $moneyChangeValue.val("");
+      $moneyChangeValue.attr(
+        "placeholder",
+        "O troco deve ser maior que o preço."
+      );
+      paymentSelected = "";
+      $card.css("opacity", "1");
+      $money.css("opacity", "1");
+    } else {
+      change = $moneyChangeValue.val();
+      $moneyChangeValue.css("border", "1px solid #ccc");
+      $buyCart.css("filter", "none");
+      $buyCart.css("pointer-events", "auto");
+      $moneyChangeMessage.hide();
+      $(".change").text(
+        `Troco para R$ ${parseFloat(change).toFixed(2).replace(".", ",")}`
+      );
+      $(".change").show();
+      $card.css("opacity", "0.5");
+    }
+  });
+
+  $moneyChangeConfirmationNegative.on("click", function () {
+    change = 0;
+    $moneyChangeValue.val("");
+    $moneyChangeValue.css("border", "1px solid #ccc");
+    $moneyChangeValue.attr("placeholder", "");
+    $buyCart.css("filter", "none");
+    $buyCart.css("pointer-events", "auto");
+    $moneyChangeMessage.hide();
+    $(".change").empty();
+    $(".change").hide();
+  });
+
+  $cartFinishButton.on("click", function () {
+    console.log(paymentSelected);
+    if (!cart) {
+      showAlert("O carrinho está vazio.", "#f44336");
+    } else if (!paymentSelected) {
+      showAlert("Você deve selecionar um meio de pagamento.", "#f44336");
+    }
+  });
 }
 
 function updateCartProductState(domId) {
@@ -255,6 +369,7 @@ function updateCartPriceState() {
   $("#subtotal-price-value").text("R$ " + precoFormatado);
   $("#final-price-value").text("R$ " + precoFormatadoFrete);
   console.log("preço:" + precoFormatado);
+  precoGeral = precoTotal;
 }
 
 function removeItem(id) {
@@ -265,6 +380,11 @@ function removeItem(id) {
   }
   console.log("Item removido do carrinho.");
   $("#productLayout" + id).remove();
+  paymentSelected = "";
+  $card.css("opacity", "1");
+  $money.css("opacity", "1");
+  $moneyChangeValue.text("");
+  $moneyChangeValue.hide();
   updateCartPriceState();
 }
 

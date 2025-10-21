@@ -110,6 +110,12 @@ body {
   color: white;
   font-size: 25px;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.navBar-links > a {
+  color: white;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
@@ -191,7 +197,6 @@ body {
     align-items: flex-start;
   }
 }
-
 
 .cart-product-name {
   font-size: 20px;
@@ -391,6 +396,21 @@ body {
   justify-content: center;
 }
 
+.back-cart-float-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: #e01919;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
 .cart-icon {
   width: 30px;
   height: auto;
@@ -401,7 +421,7 @@ body {
   text-decoration: underline;
   color: #555555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .product-information {
@@ -410,7 +430,116 @@ body {
 }
 
 .product-description {
-  font-size: 10px;
+  font-size: 12px;
   color: #777777;
   display: none;
+}
+
+#obs {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  resize: none;
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+  text-align: left;
+  margin-bottom: 20px;
+  margin-inline: 20px;
+}
+
+#obs:focus {
+  outline: none;
+  border-color: #e01919;
+  box-shadow: 0 0 5px rgba(224, 25, 25, 0.5);
+}
+
+#obs::placeholder {
+  text-align: center;
+}
+
+.payment-methods {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 20px;
+}
+
+.payment-methods > span {
+  border-radius: 10px;
+  background-color: #e01919;
+  color: white;
+  padding: 10px;
+  width: 100px;
+  cursor: pointer;
+}
+
+.money-change-message {
+  /* 1. Define a posição como fixa na tela */
+  position: fixed;
+
+  /* 2. Move o ponto de origem para o centro da tela */
+  top: 50%;
+  left: 50%;
+
+  /* 3. Centraliza o elemento movendo-o para trás 50% da sua PRÓPRIA largura e altura */
+  transform: translate(-50%, -50%);
+
+  /* Outras estilizações (mantidas do seu código original) */
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 3%;
+  width: fit-content;
+
+  /* Garante que o elemento fique acima de outros */
+  z-index: 1000;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+#money-change-input {
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#money-change-confirm-btn {
+  border-radius: 10px;
+  background-color: #e01919;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  font-size: 12px;
+}
+
+#money-change-confirm-btn-negative {
+  border-radius: 10px;
+  color: #555555;
+  font-weight: 400;
+  border: #e0e0e0 2px solid;
+  padding: 10px;
+  width: 100%;
+  font-size: 12px;
+  background-color: transparent;
+}
+
+.money-change-text {
+  font-size: 20px;
+  outline: none;
+}
+#money-change-input:focus {
+  outline: none;
+}
+
+.change {
+  font-size: 12px;
+  color: #777777;
+  display: none;
+  margin-bottom: 20px;
 }

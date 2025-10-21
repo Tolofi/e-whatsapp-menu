@@ -11,16 +11,32 @@
     <script type="module" src="index.js" defer></script>
   </head>
   <body>
+    <div class="money-change-message">
+      <span class="money-change-text">Precisa de troco? </span>
+      <input type="number" id="money-change-input" />
+      <button id="money-change-confirm-btn">Ok</button>
+      <button id="money-change-confirm-btn-negative">
+        Não preciso de troco
+      </button>
+    </div>
     <div class="cart-float-button">
       <img class="cart-icon" src="source/shopping-cart.png" alt="" />
     </div>
+
     <span class="alert"></span>
     <div div class="navBar">
       <span class="navBar-links" id="inicio">Início</span>
       <span><img id="logo" src="source/logo.png" alt="logo" /></span>
-      <span class="navBar-links">Contato</span>
+      <span class="navBar-links"
+        ><a class="link" href="https://wa.me/5532998154975" target="_blank"
+          >Contato</a
+        ></span
+      >
     </div>
     <div class="buy-container">
+      <div class="back-cart-float-button" id="back-cart-button">
+        <img class="cart-icon" src="source/back.png" alt="" />
+      </div>
       <span class="cart-title">Carrinho</span>
 
       <span id="cart-subtitle">Itens</span>
@@ -39,10 +55,20 @@
           </div>
         </div> -->
       </div>
+      <span id="cart-subtitle">Observações</span>
+      <textarea type="textbox" rows="3" id="obs" placeholder="..."></textarea>
+      <span id="cart-subtitle">Pagamento</span>
+      <div class="payment-methods">
+        <span id="card">Cartão</span>
+        <span id="money">Dinheiro</span>
+      </div>
+      <span class="change"></span>
       <div class="order-price">
         <div class="order-line">
           <span id="cart-subtotal" class="secondary-final-lable">Subtotal</span
-          ><span class="secondary-final-price" id="subtotal-price-value"> R$ 4,00</span>
+          ><span class="secondary-final-price" id="subtotal-price-value">
+            R$ 4,00</span
+          >
         </div>
         <div class="order-line">
           <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
@@ -50,7 +76,11 @@
         </div>
         <div class="order-line">
           <span id="cart-total" class="final-price">Total </span
-          ><span class="secondary-final-price final-price" id="final-price-value">R$ 4,00</span>
+          ><span
+            class="secondary-final-price final-price"
+            id="final-price-value"
+            >R$ 4,00</span
+          >
         </div>
       </div>
       <span class="finish-button-container">
