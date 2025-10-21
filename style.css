@@ -31,7 +31,6 @@ body {
   width: 20%;
   text-align: center;
   align-items: center;
-  font-size: 30px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   flex-basis: calc(33.333% - 14px);
 }
@@ -39,6 +38,7 @@ body {
 @media (max-width: 768px) {
   .product {
     width: 70%;
+    flex-basis: calc(50% - 14px);
   }
 }
 .product-line {
@@ -83,6 +83,7 @@ body {
   background-color: #e01919;
   padding: 10px;
   color: white;
+  margin-bottom: 10%;
 }
 
 .social-media-container {
@@ -108,6 +109,7 @@ body {
 .navBar-links {
   color: white;
   font-size: 25px;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -133,7 +135,7 @@ body {
 }
 
 .buy-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   margin: 10%;
   text-align: center;
@@ -183,11 +185,19 @@ body {
   min-width: 0;
   /* Não precisa de muito estilo aqui, o flex do pai já o posiciona */
 }
+
+@media (min-width: 768px) {
+  .product-info {
+    align-items: flex-start;
+  }
+}
+
+
 .cart-product-name {
   font-size: 20px;
   font-weight: 600;
   color: #333;
-  word-wrap: break-word;
+  word-break: normal;
 }
 .cart-product-price {
   font-size: 16px;
@@ -311,7 +321,14 @@ body {
 
 .order-line {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin-inline: 20%;
+}
+
+@media (max-width: 768px) {
+  .order-line {
+    margin-inline: 10%;
+  }
 }
 
 .final-advice {
@@ -359,3 +376,41 @@ body {
   display: none; /* Inicialmente escondido */
 }
 
+.cart-float-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background-color: #e01919;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-icon {
+  width: 30px;
+  height: auto;
+  filter: invert(1);
+}
+
+.product-information-btn {
+  text-decoration: underline;
+  color: #555555;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.product-information {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-description {
+  font-size: 10px;
+  color: #777777;
+  display: none;
+}

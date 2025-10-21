@@ -1,12 +1,21 @@
 import { produtosPorCategoria } from "./data.js";
 
+const frete = 4;
+
 let $buyCart = $(".buy-container");
 let $menuContainer = $(".menu-container");
 let $alertBox = $(".alert");
+let $cartButton = $(".cart-float-button");
 let cart = [];
+let $inicio = $("#inicio");
+let $cartItemsContainer = $(".cart-items");
+let $addMoreitems = $(".add-more-items-btn");
+let $removeQty = $(".remove-qty");
+let $addQty = $(".add-qty");
+let $removeItem = $(".remove-item");
 
 $(document).ready(fillMenu(produtosPorCategoria));
-function setUpProductCard(imagem, nome, preco, id) {
+function setUpProductCard(imagem, nome, preco, id, descricao) {
   let productCardHtml = `<span class="product">
               <span
                 ><img class="product-image" src="${imagem}" alt="${nome}"
@@ -20,6 +29,10 @@ function setUpProductCard(imagem, nome, preco, id) {
                   Adicionar ao carrinho
                 </button></span
               >
+              <span class="product-information" >
+              <span class="product-description">${descricao}</span>
+              <span class="product-information-btn" data-id="${id}">Mais informações</span>
+            </span>
             </span>`;
 
   return $(productCardHtml);
@@ -69,7 +82,8 @@ function fillMenu(produtosPorCategoria) {
         produto.imagem,
         produto.nome,
         produto.preco,
-        produto.id
+        produto.id,
+        produto.descricao
       );
 
       // Adiciona (append) o card recém-criado ao grid desta categoria
@@ -96,7 +110,7 @@ function showCart() {
   $menuContainer.hide();
 }
 function showMenu() {
-  $menuContainer.css("display", "flex");
+  $menuContainer.css("display", "block");
   $buyCart.hide();
 }
 
@@ -123,6 +137,8 @@ function listeners() {
           // SE ELE JÁ EXISTE NO CARRINHO:
           // Aumentamos a quantidade do objeto que encontramos DENTRO do carrinho.
           itemExistenteNoCarrinho.qtd += 1;
+          updateCartPriceState();
+          updateCartProductState(itemExistenteNoCarrinho.id);
           showAlert("Quantidade aumentada no carrinho!", "#4BB543");
         } else {
           // SE ELE NÃO EXISTE NO CARRINHO:
@@ -130,7 +146,37 @@ function listeners() {
           produtoEncontrado.qtd = 1;
           // E o adicionamos ao carrinho.
           cart.push(produtoEncontrado);
+          updateCartPriceState();
           showAlert("Item adicionado ao carrinho!", "#4BB543");
+        }
+
+        if (!itemExistenteNoCarrinho) {
+          // 1. Calcula o total do item (número)
+          const precoTotal = produtoEncontrado.preco * produtoEncontrado.qtd;
+
+          // 2. Formata o resultado para BRL (string)
+          const precoFormatado =
+            precoTotal.toFixed(2).replace(".", ",") +
+            " (x " +
+            produtoEncontrado.qtd +
+            ")";
+          const productLayoutHtml =
+            $(`<div class="cart-product-layout" id="productLayout${produtoEncontrado.id}">
+          <div class="product-info">
+            <span class="cart-product-name">${produtoEncontrado.nome}</span>
+            <span class="cart-product-price" id="cartProductPrice${produtoEncontrado.id}">R$ ${precoFormatado}</span>
+          </div>
+
+          <div class="product-controls">
+            <button class="control-btn remove-qty" data-id="${produtoEncontrado.id}">-</button>
+            <span class="cart-product-qty" id="cartProductQty${produtoEncontrado.id}" data-id="${produtoEncontrado.id}">${produtoEncontrado.qtd}</span>
+            <button class="control-btn add-qty" data-id="${produtoEncontrado.id}">+</button>
+            <button class="control-btn remove-item" data-id="${produtoEncontrado.id}">x</button>
+          </div>
+        </div>`);
+
+          $cartItemsContainer.append(productLayoutHtml);
+          console.log(productLayoutHtml);
         }
 
         console.log(cart);
@@ -138,18 +184,111 @@ function listeners() {
       }
     }
   });
+
+  $cartButton.on("click", function () {
+    showCart();
+    if (cart.length > 0) return;
+    $cartItemsContainer.empty();
+    $cartItemsContainer.text("O carrinho está vazio. Adicione alguns itens!");
+  });
+
+  $inicio.on("click", function () {
+    showMenu();
+  });
+  $addMoreitems.on("click", function () {
+    showMenu();
+  });
+  // Evento para AUMENTAR QUANTIDADE (+)
+  // Anexamos o evento ao contêiner ($cartItemsContainer) e esperamos cliques no '.add-qty'
+  $cartItemsContainer.on("click", ".add-qty", function () {
+    const id = $(this).data("id");
+    increaseItem(id); // Função para aumentar
+    updateCartProductState(id);
+    updateCartPriceState();
+    console.log("Aumentar QTD - ID:", id);
+  });
+
+  // Evento para DIMINUIR QUANTIDADE (-)
+  // Observação: a lógica de remover o item se QTD <= 1 está dentro de decreaseItem
+  $cartItemsContainer.on("click", ".remove-qty", function () {
+    const id = $(this).data("id");
+    decreaseItem(id); // Função para diminuir
+    // O updateCartProductState e updateCartPriceState estão implícitos dentro de decreaseItem/removeItem
+    // Se você quiser garantir a atualização visual, chame-os após a diminuição:
+    updateCartProductState(id);
+    updateCartPriceState();
+    console.log("Diminuir QTD - ID:", id);
+  });
+
+  // Evento para REMOVER ITEM (x)
+  $cartItemsContainer.on("click", ".remove-item", function () {
+    const id = $(this).data("id");
+    removeItem(id);
+    updateCartPriceState(); // Atualiza o preço total após a remoção
+    console.log("Remover Item - ID:", id);
+  });
+
+  $menuContainer.on("click", ".product-information-btn", function () {
+    $(this).prev().toggle();
+  });
+
 }
 
-function addItemToCart(item) {
-    
-} 
-
-function removeItem(item) {}
-
-function increaseItem(item) {
-  item.data("id");
+function updateCartProductState(domId) {
+  const currentProduct = cart.find((item) => item.id === domId);
+  const precoTotal = currentProduct.preco * currentProduct.qtd;
+  const precoFormatado = precoTotal.toFixed(2).replace(".", ",");
+  $("#cartProductQty" + domId).text(currentProduct.qtd);
+  $("#cartProductPrice" + domId).text(
+    `R$ ${precoFormatado} (x${currentProduct.qtd})`
+  );
 }
 
-function decreaseItem(Item) {}
+function updateCartPriceState() {
+  let precoTotal = 0;
+  cart.forEach((item) => {
+    precoTotal += item.preco * item.qtd;
+  });
+  const precoTotalFrete = precoTotal + frete;
+  const precoFormatado = precoTotal.toFixed(2).replace(".", ",");
+  const precoFormatadoFrete = precoTotalFrete.toFixed(2).replace(".", ",");
+  $("#subtotal-price-value").text("R$ " + precoFormatado);
+  $("#final-price-value").text("R$ " + precoFormatadoFrete);
+  console.log("preço:" + precoFormatado);
+}
+
+function removeItem(id) {
+  const currentProduct = cart.find((item) => item.id === id);
+  const indice = cart.indexOf(currentProduct);
+  if (indice > -1) {
+    cart.splice(indice, 1);
+  }
+  console.log("Item removido do carrinho.");
+  $("#productLayout" + id).remove();
+  updateCartPriceState();
+}
+
+function increaseItem(id) {
+  const currentProduct = cart.find((item) => item.id === id);
+  if (!currentProduct.qtd) {
+    currentProduct.qtd = 1;
+  } else {
+    currentProduct.qtd++;
+  }
+  updateCartProductState(currentProduct.id);
+  updateCartPriceState();
+  console.log("chegou na função increase");
+}
+
+function decreaseItem(id) {
+  const currentProduct = cart.find((item) => item.id === id);
+  if (currentProduct.qtd > 1) {
+    currentProduct.qtd--;
+  } else {
+    removeItem(id);
+  }
+  updateCartProductState(currentProduct.id);
+  updateCartPriceState();
+}
 
 listeners();

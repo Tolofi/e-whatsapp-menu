@@ -11,22 +11,24 @@
     <script type="module" src="index.js" defer></script>
   </head>
   <body>
+    <div class="cart-float-button">
+      <img class="cart-icon" src="source/shopping-cart.png" alt="" />
+    </div>
     <span class="alert"></span>
     <div div class="navBar">
-      <span class="navBar-links">Início</span>
+      <span class="navBar-links" id="inicio">Início</span>
       <span><img id="logo" src="source/logo.png" alt="logo" /></span>
       <span class="navBar-links">Contato</span>
     </div>
-
-    <!-- <div class="buy-container">
+    <div class="buy-container">
       <span class="cart-title">Carrinho</span>
 
       <span id="cart-subtitle">Itens</span>
       <div class="cart-items">
-        <div class="cart-product-layout">
+        <!-- <div class="cart-product-layout">
           <div class="product-info">
             <span class="cart-product-name">X-Tudinho</span>
-            <span class="cart-product-price">R$ 2,00</span>
+            <span class="cart-product-price"><span>R$ 2,00</span> <span>(R$ 4,00 x 2)</span></span>
           </div>
 
           <div class="product-controls">
@@ -35,12 +37,12 @@
             <button class="control-btn add-qty">+</button>
             <button class="control-btn remove-item">x</button>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="order-price">
         <div class="order-line">
           <span id="cart-subtotal" class="secondary-final-lable">Subtotal</span
-          ><span class="secondary-final-price"> R$ 4,00</span>
+          ><span class="secondary-final-price" id="subtotal-price-value"> R$ 4,00</span>
         </div>
         <div class="order-line">
           <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
@@ -48,7 +50,7 @@
         </div>
         <div class="order-line">
           <span id="cart-total" class="final-price">Total </span
-          ><span class="secondary-final-price final-price" s>R$ 4,00</span>
+          ><span class="secondary-final-price final-price" id="final-price-value">R$ 4,00</span>
         </div>
       </div>
       <span class="finish-button-container">
@@ -63,7 +65,7 @@
         >Ao ser redirecionado para o whatsapp, apenas envie a mensagem já
         escrita.</span
       >
-    </div> -->
+    </div>
     <div class="menu-container">
       <span class="class-span" data-id="">
         <span class="class-title">Premium</span>
@@ -78,7 +80,9 @@
               ><button class="addToCart-button" product="1">
                 Adicionar ao carrinho
               </button></span
-            >
+            ><span class="product-information">
+              <span class="product-information-btn">Mais informações</span>
+            </span>
           </span>
           <span class="product">
             <span
