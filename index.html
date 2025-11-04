@@ -11,8 +11,13 @@
     <script type="module" src="index.js" defer></script>
   </head>
   <body>
+    <div class="card-select">
+      <span class="select-card-label">Modalidade</span>
+      <button class="payment-button" id="credit">Crédito</button>
+      <button class="payment-button" id="debit">Débito</button>
+    </div>
     <div class="money-change-message">
-      <span class="money-change-text">Precisa de troco? </span>
+      <span class="money-change-text">Troco </span>
       <input type="number" id="money-change-input" />
       <button id="money-change-confirm-btn">Ok</button>
       <button id="money-change-confirm-btn-negative">
@@ -39,7 +44,7 @@
       </div>
       <span class="cart-title">Carrinho</span>
 
-      <span id="cart-subtitle">Itens</span>
+      <span class="cart-subtitle">Itens</span>
       <div class="cart-items">
         <!-- <div class="cart-product-layout">
           <div class="product-info">
@@ -55,31 +60,47 @@
           </div>
         </div> -->
       </div>
-      <span id="cart-subtitle">Observações</span>
+      <span class="cart-subtitle">Observações</span>
       <textarea type="textbox" rows="3" id="obs" placeholder="..."></textarea>
-      <span id="cart-subtitle">Pagamento</span>
+      <span class="cart-subtitle">Pagamento</span>
       <div class="payment-methods">
         <span id="card">Cartão</span>
         <span id="money">Dinheiro</span>
+        <span id="pix">Pix</span>
       </div>
       <span class="change"></span>
+      <span>
+        <span class="cart-subtitle"> Endereço </span>
+        <div>
+          <input type="text" class="adress" id="adress" />
+        </div>
+      </span>
+      <span>
+        <span class="cart-subtitle"> Cliente </span>
+        <div>
+          <input type="text" class="adress" id="client-name" />
+        </div>
+      </span>
       <div class="order-price">
         <div class="order-line">
-          <span id="cart-subtotal" class="secondary-final-lable">Subtotal</span
+          <span class="cart-subtotal" class="secondary-final-lable"
+            >Subtotal</span
           ><span class="secondary-final-price" id="subtotal-price-value">
-            R$ 4,00</span
+            R$ 0,00</span
           >
         </div>
         <div class="order-line">
           <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
-          <span class="secondary-final-price"> R$ 4,00</span>
+          <span class="secondary-final-price" id="delivery-price">
+            R$ 0,00</span
+          >
         </div>
         <div class="order-line">
           <span id="cart-total" class="final-price">Total </span
           ><span
             class="secondary-final-price final-price"
             id="final-price-value"
-            >R$ 4,00</span
+            >R$ 0,00</span
           >
         </div>
       </div>

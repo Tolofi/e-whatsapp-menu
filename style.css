@@ -37,7 +37,7 @@ body {
 
 @media (max-width: 768px) {
   .product {
-    width: 70%;
+    width: 45%;
     flex-basis: calc(50% - 14px);
   }
 }
@@ -58,12 +58,13 @@ body {
 }
 
 .class-title {
-  font-size: 55px;
+  font-size: 50px;
   text-align: center;
   margin: 2%;
   font-family: "Arvo", serif;
   font-weight: 500;
   font-style: normal;
+  word-break:  break-word;
 }
 
 @media (max-width: 768px) {
@@ -136,7 +137,7 @@ body {
 }
 
 .product-name {
-  font-size: 25px;
+  font-size: 20px;
   text-align: center;
 }
 
@@ -159,7 +160,7 @@ body {
   font-style: normal;
 }
 
-#cart-subtitle {
+.cart-subtitle {
   font-size: 30px;
   text-align: center;
   margin-bottom: 2%; /* Ajustado para espaçamento inferior */
@@ -501,6 +502,40 @@ body {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.select-card-label {
+  font-size: 25px;
+  font-family: "Arvo", serif;
+  font-weight: 500;
+  font-style: normal;
+  word-break:  break-word;
+}
+
+.card-select {
+  /* 1. Define a posição como fixa na tela */
+  position: fixed;
+
+  /* 2. Move o ponto de origem para o centro da tela */
+  top: 50%;
+  left: 50%;
+
+  /* 3. Centraliza o elemento movendo-o para trás 50% da sua PRÓPRIA largura e altura */
+  transform: translate(-50%, -50%);
+
+  /* Outras estilizações (mantidas do seu código original) */
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 2%;
+  width: fit-content;
+
+  /* Garante que o elemento fique acima de outros */
+  z-index: 1000;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 #money-change-input {
   border: none;
   padding: 8px;
@@ -508,14 +543,15 @@ body {
   border: 1px solid #ccc;
 }
 
-#money-change-confirm-btn {
+#money-change-confirm-btn,
+.payment-button {
   border-radius: 10px;
   background-color: #e01919;
   color: white;
   padding: 10px;
   width: 100%;
   border: none;
-  font-size: 12px;
+  font-size: 15px;
 }
 
 #money-change-confirm-btn-negative {
@@ -543,3 +579,18 @@ body {
   display: none;
   margin-bottom: 20px;
 }
+
+.adress {
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.adress:focus {
+  outline: none;
+  border-color: #e01919;
+  box-shadow: 0 0 5px rgba(224, 25, 25, 0.5);
+}
+

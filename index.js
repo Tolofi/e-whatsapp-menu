@@ -1,11 +1,21 @@
 import { produtosPorCategoria } from "./data.js";
 
 const frete = 4;
+
 let change = 0;
 let precoGeral = 0;
 let paymentSelected = "";
 let orderResumeMessage = "";
+// Inicializa fullOrderObject com as propriedades esperadas
+let fullOrderObject = {
+  cliente: "",
+  pagamento: "",
+  endereco: "",
+  observacoes: "",
+  produtos: [],
+};
 
+// Seletores JQuery
 let $buyCart = $(".buy-container");
 let $menuContainer = $(".menu-container");
 let $alertBox = $(".alert");
@@ -21,13 +31,56 @@ let $addQty = $(".add-qty");
 let $removeItem = $(".remove-item");
 let $money = $("#money");
 let $card = $("#card");
+let $pix = $("#pix");
 let $moneyChangeMessage = $(".money-change-message");
 let $moneyChangeConfirmation = $("#money-change-confirm-btn");
 let $moneyChangeConfirmationNegative = $("#money-change-confirm-btn-negative");
 let $moneyChangeValue = $("#money-change-input");
+let $cardSelect = $(".card-select");
+let $creditCard = $("#credit");
+let $debitCard = $("#debit");
+let $adress = $("#adress");
+let $observacao = $("#obs");
+let $clientName = $("#client-name"); // NOVO: Seletor para o nome do cliente
 
-$(document).ready(fillMenu(produtosPorCategoria));
+
+// ========================================================
+// FUNÇÕES DE LOCAL STORAGE
+// ========================================================
+
+function saveUserData(cliente, endereco) {
+  if (typeof Storage !== "undefined") {
+    localStorage.setItem("cliente", cliente);
+    localStorage.setItem("endereco", endereco);
+    console.log("Dados do cliente e endereço salvos no localStorage.");
+  }
+}
+
+function loadUserData() {
+  if (typeof Storage !== "undefined") {
+    const savedClient = localStorage.getItem("cliente");
+    const savedAddress = localStorage.getItem("endereco");
+
+    if (savedClient) {
+      $clientName.val(savedClient);
+    }
+    if (savedAddress) {
+      $adress.val(savedAddress);
+    }
+  }
+}
+
+// ========================================================
+// INICIALIZAÇÃO E FUNÇÕES BÁSICAS
+// ========================================================
+
+$(document).ready(function () {
+  fillMenu(produtosPorCategoria);
+  loadUserData(); // NOVO: Carrega dados ao iniciar
+});
+
 function setUpProductCard(imagem, nome, preco, id, descricao) {
+  console.log(`${id}, nome: ${nome}`)
   let productCardHtml = `<span class="product">
               <span
                 ><img class="product-image" src="${imagem}" alt="${nome}"
@@ -38,7 +91,7 @@ function setUpProductCard(imagem, nome, preco, id, descricao) {
                 .replace(".", ",")}</span>
               <span
                 ><button class="addToCart-button" data-id="${id}">
-                  Adicionar ao carrinho
+                  Adicionar
                 </button></span
               >
               <span class="product-information" >
@@ -62,7 +115,6 @@ function showAlert(message, color) {
 function fillMenu(produtosPorCategoria) {
   // 1. Limpa o container principal para garantir que não haja conteúdo antigo.
   $menuContainer.empty();
-
   // 2. USA O LOOP 'FOR...IN' PARA PERCORRER AS CATEGORIAS (AS CHAVES DO OBJETO)
   for (const nomeDaCategoria in produtosPorCategoria) {
     // =======================================================
@@ -202,8 +254,28 @@ function listeners() {
   });
 
   $cartButton.on("click", function () {
-    showCart();
-    if (cart.length > 0) return;
+    showCart(); // 1. Sempre mostra o container do carrinho
+
+    if (cart.length > 0) {
+      // 2. Se houver itens, apenas para a execução, mantendo os itens que já foram adicionados
+      // e escondendo a mensagem de "vazio".
+      console.log("Carrinho carregado com itens.");
+
+      // **IMPORTANTE**: Garante que o texto de "vazio" seja removido
+      // caso o carrinho estivesse vazio, o usuário adicionou itens e agora clica no botão.
+      // Se o seu HTML inicial já tem o div `.cart-items` vazio, você pode omitir as duas linhas abaixo
+      // se o conteúdo dos itens está sendo gerado de forma correta e limpa.
+      if (
+        $cartItemsContainer.text() ===
+        "O carrinho está vazio. Adicione alguns itens!"
+      ) {
+        $cartItemsContainer.empty();
+      }
+
+      return;
+    }
+
+    // 3. Se o carrinho estiver vazio, exibe a mensagem de vazio
     $cartItemsContainer.empty();
     $cartItemsContainer.text("O carrinho está vazio. Adicione alguns itens!");
     console.log("Carrinho vazio.");
@@ -214,6 +286,7 @@ function listeners() {
     $buyCart.css("filter", "none");
     $buyCart.css("pointer-events", "auto");
     $moneyChangeMessage.hide();
+    $cardSelect.hide();
   });
   $addMoreitems.on("click", function () {
     showMenu();
@@ -261,36 +334,50 @@ function listeners() {
 
   let cardClicked = false;
   let moneyClicked = false;
-  let paymentSelected = "";
   $money.on("click", function () {
     cardClicked = false;
-    moneyClicked = !moneyClicked;
-    if (moneyClicked) {
-      $money.css("opacity", "1");
-      $card.css("opacity", "0.5");
-    }
-    paymentSelected = "money";
-    console.log(paymentSelected);
+    moneyClicked = true;
+
+    // Configura a opacidade
+    $money.css("opacity", "1");
+    $card.css("opacity", "0.5");
+
+    // Abre o modal de troco
     $moneyChangeMessage.css("display", "flex");
     $buyCart.css("filter", "blur(5px)");
     $buyCart.css("pointer-events", "none");
+    console.log("Dinheiro clicado. Aguardando troco.");
+  });
+
+  $pix.on("click", function () {
+    cardClicked = false;
+    moneyClicked = false;
+
+    // Configura a opacidade
+    $money.css("opacity", "0.5");
+    $card.css("opacity", "0.5");
+    $pix.css("opacity", "1");
+
+    // Abre o modal de troco
   });
 
   $card.on("click", function () {
     moneyClicked = false;
-    cardClicked = !cardClicked;
-    if (cardClicked) {
-      $card.css("opacity", "1");
-      $money.css("opacity", "0.5");
-    }
-    paymentSelected = "card";
-    console.log(paymentSelected);
+    cardClicked = true;
+
+    // Configura a opacidade
+    $card.css("opacity", "1");
+    $money.css("opacity", "0.5");
+
+    // Abre o modal de cartão
+    $buyCart.css("filter", "blur(5px)");
+    $buyCart.css("pointer-events", "none");
+    $cardSelect.css("display", "flex");
+    console.log("Cartão clicado. Selecionar tipo.");
   });
 
   $moneyChangeConfirmation.on("click", function () {
-    console.log("a");
-    if (
-      $moneyChangeValue.val() == "") {
+    if ($moneyChangeValue.val() == "") {
       $moneyChangeValue.css("border", "1px solid red");
       paymentSelected = "";
       $card.css("opacity", "1");
@@ -313,39 +400,81 @@ function listeners() {
       $card.css("opacity", "1");
       $money.css("opacity", "1");
     } else {
-      change = $moneyChangeValue.val();
+      change = parseFloat($moneyChangeValue.val().trim().replace(",", "."));
       $moneyChangeValue.css("border", "1px solid #ccc");
       $buyCart.css("filter", "none");
       $buyCart.css("pointer-events", "auto");
       $moneyChangeMessage.hide();
-      $(".change").text(
-        `Troco para R$ ${parseFloat(change).toFixed(2).replace(".", ",")}`
-      );
+      paymentSelected = `Dinheiro (Troco: R$ ${change
+        .toFixed(2)
+        .replace(".", ",")})`;
+      $(".change").text(`Troco para R$ ${change.toFixed(2).replace(".", ",")}`);
       $(".change").show();
       $card.css("opacity", "0.5");
+      $pix.css("opacity", "0.5");
+      $money.css("opacity", "1");
+      console.log(paymentSelected);
     }
   });
 
   $moneyChangeConfirmationNegative.on("click", function () {
     change = 0;
+
+    paymentSelected = "Dinheiro (Sem troco)";
+
+    $money.css("opacity", "1");
+    $card.css("opacity", "0.5");
+
     $moneyChangeValue.val("");
     $moneyChangeValue.css("border", "1px solid #ccc");
     $moneyChangeValue.attr("placeholder", "");
+
     $buyCart.css("filter", "none");
     $buyCart.css("pointer-events", "auto");
     $moneyChangeMessage.hide();
+
     $(".change").empty();
     $(".change").hide();
+
+    console.log(paymentSelected);
+  });
+
+  $creditCard.on("click", function () {
+    paymentSelected = "Cartão de Crédito";
+    $money.css("opacity", "0.5");
+    $pix.css("opacity", "0.5");
+    $card.css("opacity", "1");
+
+    $moneyChangeValue.val("");
+    $cardSelect.hide();
+    $buyCart.css("filter", "none");
+    $buyCart.css("pointer-events", "auto");
+
+    change = 0;
+    $(".change").empty().hide();
+    console.log(paymentSelected);
+  });
+
+  $debitCard.on("click", function () {
+    paymentSelected = "Cartão de Débito";
+    $money.css("opacity", "0.5");
+    $pix.css("opacity", "0.5");
+    $card.css("opacity", "1");
+
+    $moneyChangeValue.val("");
+    $cardSelect.hide();
+    $buyCart.css("filter", "none");
+    $buyCart.css("pointer-events", "auto");
+
+    change = 0;
+    $(".change").empty().hide();
+    console.log(paymentSelected);
   });
 
   $cartFinishButton.on("click", function () {
-    console.log(paymentSelected);
-    if (!cart) {
-      showAlert("O carrinho está vazio.", "#f44336");
-    } else if (!paymentSelected) {
-      showAlert("Você deve selecionar um meio de pagamento.", "#f44336");
-    }
+    finishOrderObject();
   });
+  $("#delivery-price").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
 }
 
 function updateCartProductState(domId) {
@@ -356,6 +485,108 @@ function updateCartProductState(domId) {
   $("#cartProductPrice" + domId).text(
     `R$ ${precoFormatado} (x${currentProduct.qtd})`
   );
+}
+
+function finishOrderObject() {
+  const nomeCliente = $clientName.val().trim();
+  const enderecoEntrega = $adress.val().trim();
+  const observacoes = $observacao.val().trim();
+
+  // 1. Validação de Carrinho
+  if (cart.length === 0) {
+    showAlert("O carrinho está vazio.", "#f44336");
+    return;
+  }
+
+  // 2. Validação de Pagamento
+  if (paymentSelected == "") {
+    showAlert("Você deve selecionar um meio de pagamento.", "#f44336");
+    return;
+  }
+  fullOrderObject.pagamento = paymentSelected;
+
+  // 3. Validação de Endereço
+  if (enderecoEntrega !== "") {
+    fullOrderObject.endereco = enderecoEntrega;
+  } else {
+    showAlert("Você deve digitar um endereço.", "#f44336");
+    return;
+  }
+
+  // 4. Validação de Cliente
+  if (nomeCliente !== "") {
+    fullOrderObject.cliente = nomeCliente;
+  } else {
+    showAlert("Você deve digitar seu nome.", "#f44336");
+    return;
+  }
+
+  // 5. Salva os dados no localStorage antes de prosseguir
+  saveUserData(nomeCliente, enderecoEntrega);
+
+  // 6. Adiciona as observações e prepara produtos
+  fullOrderObject.observacoes = observacoes;
+  fullOrderObject.produtos = cart.map((item) => ({
+    nome: item.nome,
+    qtd: item.qtd,
+  }));
+
+  // Se todas as validações passarem, gera a mensagem e redireciona
+  makeOrderMessage();
+  redirectUser();
+}
+
+function makeOrderMessage() {
+  // === LÓGICA PARA FORMATAR OS ITENS ===
+  const itensFormatados = fullOrderObject.produtos
+    .map((item) => {
+      return `- (${item.qtd}x) ${item.nome}`;
+    })
+    .join("\n");
+
+  const valorTroco =
+    change > 0
+      ? ` (Troco para R$ ${parseFloat(change).toFixed(2).replace(".", ",")})`
+      : "";
+
+  const observacoes = fullOrderObject.observacoes
+    ? `\nObservações: ${fullOrderObject.observacoes}`
+    : "";
+
+  // === MONTAGEM FINAL DA MENSAGEM ===
+  const precoTotalFrete = (precoGeral + frete).toFixed(2).replace(".", ",");
+
+  const mensagem = `*-- Resumo do Pedido --*
+----------------------------
+Cliente: ${fullOrderObject.cliente}
+
+Itens:
+${itensFormatados}
+${observacoes}
+
+----------------------------
+Subtotal: R$ ${precoGeral.toFixed(2).replace(".", ",")}
+Frete: R$ ${frete.toFixed(2).replace(".", ",")}
+*Total Final:* R$ ${precoTotalFrete}
+
+*Forma de Pagamento:* ${fullOrderObject.pagamento}${valorTroco}
+*Endereço:* ${fullOrderObject.endereco}`;
+
+  orderResumeMessage = mensagem;
+  console.log(orderResumeMessage);
+}
+
+function redirectUser() {
+  const numeroTelefone = "5519998964995"; // <-- Troque por seu número!
+  const urlBase = "https://api.whatsapp.com/send";
+
+  // Codifica a mensagem para ser usada na URL
+  const mensagemEncoded = encodeURIComponent(orderResumeMessage);
+
+  const urlCompleta = `${urlBase}?phone=${numeroTelefone}&text=${mensagemEncoded}`;
+
+  // Abre em uma nova aba (_blank)
+  window.open(urlCompleta, "_blank");
 }
 
 function updateCartPriceState() {
