@@ -54,6 +54,9 @@ body {
 .product-image {
   width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
   border-radius: 20px;
 }
 
@@ -468,11 +471,13 @@ body {
 }
 
 .payment-methods > span {
+  flex-basis: calc(33.333% - 14px);
+
+  flex-wrap: wrap;
   border-radius: 10px;
   background-color: #e01919;
   color: white;
   padding: 10px;
-  width: 100px;
   cursor: pointer;
 }
 

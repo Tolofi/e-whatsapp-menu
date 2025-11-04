@@ -43,7 +43,6 @@ let $adress = $("#adress");
 let $observacao = $("#obs");
 let $clientName = $("#client-name"); // NOVO: Seletor para o nome do cliente
 
-
 // ========================================================
 // FUNÇÕES DE LOCAL STORAGE
 // ========================================================
@@ -80,7 +79,7 @@ $(document).ready(function () {
 });
 
 function setUpProductCard(imagem, nome, preco, id, descricao) {
-  console.log(`${id}, nome: ${nome}`)
+  console.log(`${id}, nome: ${nome}`);
   let productCardHtml = `<span class="product">
               <span
                 ><img class="product-image" src="${imagem}" alt="${nome}"
@@ -341,6 +340,7 @@ function listeners() {
     // Configura a opacidade
     $money.css("opacity", "1");
     $card.css("opacity", "0.5");
+    $pix.css("opacity", "0.5");
 
     // Abre o modal de troco
     $moneyChangeMessage.css("display", "flex");
@@ -352,7 +352,7 @@ function listeners() {
   $pix.on("click", function () {
     cardClicked = false;
     moneyClicked = false;
-
+    paymentSelected = "Pix";
     // Configura a opacidade
     $money.css("opacity", "0.5");
     $card.css("opacity", "0.5");
@@ -368,6 +368,7 @@ function listeners() {
     // Configura a opacidade
     $card.css("opacity", "1");
     $money.css("opacity", "0.5");
+    $pix.css("opacity", "0.5");
 
     // Abre o modal de cartão
     $buyCart.css("filter", "blur(5px)");
@@ -419,7 +420,8 @@ function listeners() {
 
   $moneyChangeConfirmationNegative.on("click", function () {
     change = 0;
-
+    $(".change").text(`Sem troco.`);
+    $(".change").show(); 
     paymentSelected = "Dinheiro (Sem troco)";
 
     $money.css("opacity", "1");
@@ -433,8 +435,8 @@ function listeners() {
     $buyCart.css("pointer-events", "auto");
     $moneyChangeMessage.hide();
 
-    $(".change").empty();
-    $(".change").hide();
+    // $(".change").empty();
+    // $(".change").hide();
 
     console.log(paymentSelected);
   });
@@ -475,6 +477,7 @@ function listeners() {
     finishOrderObject();
   });
   $("#delivery-price").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
+  $("#final-price-value").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
 }
 
 function updateCartProductState(domId) {
