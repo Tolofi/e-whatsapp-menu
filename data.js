@@ -79,10 +79,7 @@ function agruparPorCategoria(produtos) {
     
   }, {}); // O {} no final é o valor inicial do nosso acumulador: um objeto vazio.
 }
-const produtos = await buscarDadosDoMenu();
-export const produtosPorCategoria = agruparPorCategoria(produtos);
-
-export async function carregarProdutos() {
+export async function carregarMenuCompleto() {
   const produtos = await buscarDadosDoMenu();
   return agruparPorCategoria(produtos);
 }

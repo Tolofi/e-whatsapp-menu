@@ -1,4 +1,4 @@
-import { carregarProdutos } from "./data.js";
+import { carregarMenuCompleto } from "./data.js"; 
 
 const frete = 4;
 
@@ -43,6 +43,24 @@ let $adress = $("#adress");
 let $observacao = $("#obs");
 let $clientName = $("#client-name"); // NOVO: Seletor para o nome do cliente
 
+$(document).ready(async function () {
+  // Coloque um carregando se quiser
+  console.log("Iniciando app...");
+  
+  try {
+      // Aqui nós chamamos a função e esperamos ela terminar
+      const produtosPorCategoria = await carregarMenuCompleto();
+      
+      fillMenu(produtosPorCategoria);
+      loadUserData();
+      listeners(); // Mova os listeners para cá para garantir que só rodem com o menu pronto
+      
+  } catch (error) {
+      console.error("Erro fatal ao carregar menu:", error);
+      alert("Erro ao carregar o cardápio. Verifique sua conexão.");
+  }
+});
+
 // ========================================================
 // FUNÇÕES DE LOCAL STORAGE
 // ========================================================
@@ -55,12 +73,6 @@ function saveUserData(cliente, endereco) {
   }
 }
 
-$(document).ready(async function () {
-  const produtosPorCategoria = await carregarProdutos();
-  fillMenu(produtosPorCategoria);
-  listeners();
-  loadUserData();
-});
 
 function loadUserData() {
   if (typeof Storage !== "undefined") {
