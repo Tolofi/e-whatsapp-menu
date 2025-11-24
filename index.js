@@ -220,8 +220,8 @@ function listeners() {
   $menuContainer.on("click", ".addToCart-button", function () {
     const idDoProdutoClicado = $(this).data("id");
 
-    for (let categoria in produtosPorCategoria) {
-      let categoriaAtual = produtosPorCategoria[categoria];
+    for (let categoria in cardapioGlobal) { 
+      let categoriaAtual = cardapioGlobal[categoria];
       let produtoEncontrado = categoriaAtual.find(
         (produto) => produto.id === idDoProdutoClicado
       );
