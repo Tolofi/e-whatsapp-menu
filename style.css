@@ -599,3 +599,15 @@ body {
   box-shadow: 0 0 5px rgba(224, 25, 25, 0.5);
 }
 
+.footer {
+  text-align: center;
+  padding: 8%;
+  font-size: 14px;
+  background-color: #e01919;
+  color: white;
+}
+
+#footerLink {
+  /* text-decoration: none; */
+  color: white;
+}
