@@ -43,6 +43,7 @@ let $debitCard = $("#debit");
 let $adress = $("#adress");
 let $observacao = $("#obs");
 let $clientName = $("#client-name"); 
+let $cartEmptyMsg = $(".isCartEmpty"); 
 
 
 // ========================================================
@@ -162,6 +163,7 @@ function listeners() {
 
           // Renderiza o item no carrinho visualmente
           renderCartItem(novoItemCarrinho);
+          console.log("Era pra estar renderizado.")
         }
         return; 
       }
@@ -172,13 +174,10 @@ function listeners() {
   $cartButton.on("click", function () {
     showCart();
     if (cart.length > 0) {
-      if ($cartItemsContainer.text() === "O carrinho está vazio. Adicione alguns itens!") {
-        $cartItemsContainer.empty();
-      }
-      return;
+      $cartEmptyMsg.empty();
+    }  else {
+      $cartEmptyMsg.text("O carrinho está vazio. Adicione alguns itens!");
     }
-    $cartItemsContainer.empty();
-    $cartItemsContainer.text("O carrinho está vazio. Adicione alguns itens!");
   });
 
   $inicio.on("click", function () {
@@ -328,7 +327,13 @@ function renderCartItem(item) {
       </div>
     </div>`);
 
-  $cartItemsContainer.append(productLayoutHtml);
+    console.log(productLayoutHtml.html());
+    try {
+      $cartItemsContainer.append(productLayoutHtml);
+      console.log("Tentando adicionar item ao carrinho visualmente...");
+    } catch (error) {
+      console.error("Erro ao tentar adicionar item ao carrinho visualmente:", error);
+    }
 }
 
 function showCart() {
