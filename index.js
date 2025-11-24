@@ -206,6 +206,9 @@ function listeners() {
   $cartItemsContainer.on("click", ".remove-item", function () {
     const id = $(this).data("id");
     removeItem(id);
+    if(cart.length === 0){
+      $cartEmptyMsg.text("O carrinho está vazio. Adicione alguns itens!");
+    }
   });
 
   let clicked = false;
@@ -241,6 +244,7 @@ function listeners() {
     $money.css("opacity", "0.5");
     $card.css("opacity", "0.5");
     $pix.css("opacity", "1");
+    $(".change").hide();
   });
 
   $card.on("click", function () {
@@ -310,12 +314,15 @@ function listeners() {
 
   $creditCard.on("click", function () {
     paymentSelected = "Cartão de Crédito";
+    console.log(paymentSelected);
     $money.css("opacity", "0.5");
     $pix.css("opacity", "0.5");
     $card.css("opacity", "1");
     $cardSelect.hide();
     $buyCart.css("filter", "none");
     $buyCart.css("pointer-events", "auto");
+    $(".change").text(`Cartão de Crédito.`);
+    $(".change").show();
   });
 
   $debitCard.on("click", function () {
@@ -326,6 +333,8 @@ function listeners() {
     $cardSelect.hide();
     $buyCart.css("filter", "none");
     $buyCart.css("pointer-events", "auto");
+    $(".change").text(`Cartão de Débito.`);
+    $(".change").show();
   });
 
   $cartFinishButton.on("click", function () {
