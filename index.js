@@ -1,4 +1,4 @@
-import { produtosPorCategoria } from "./data.js";
+import { carregarProdutos } from "./data.js";
 
 const frete = 4;
 
@@ -54,6 +54,13 @@ function saveUserData(cliente, endereco) {
     console.log("Dados do cliente e endereço salvos no localStorage.");
   }
 }
+
+$(document).ready(async function () {
+  const produtosPorCategoria = await carregarProdutos();
+  fillMenu(produtosPorCategoria);
+  listeners();
+  loadUserData();
+});
 
 function loadUserData() {
   if (typeof Storage !== "undefined") {

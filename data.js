@@ -81,3 +81,8 @@ function agruparPorCategoria(produtos) {
 }
 const produtos = await buscarDadosDoMenu();
 export const produtosPorCategoria = agruparPorCategoria(produtos);
+
+export async function carregarProdutos() {
+  const produtos = await buscarDadosDoMenu();
+  return agruparPorCategoria(produtos);
+}
