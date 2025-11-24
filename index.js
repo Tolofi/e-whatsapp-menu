@@ -61,6 +61,20 @@ $(document).ready(async function () {
   }
 });
 
+$(document).ready(async function () {
+  try {
+      // 2. Carrega os dados e salva na variável GLOBAL
+      cardapioGlobal = await carregarMenuCompleto();
+      
+      // 3. Preenche o menu e inicia os ouvintes
+      fillMenu(cardapioGlobal);
+      listeners(); 
+      loadUserData();
+  } catch (error) {
+      console.error("Erro:", error);
+  }
+});
+
 // ========================================================
 // FUNÇÕES DE LOCAL STORAGE
 // ========================================================
