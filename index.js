@@ -262,7 +262,6 @@ function listeners() {
     if ($moneyChangeValue.val() == "") {
       $moneyChangeValue.css("border", "1px solid red");
       paymentSelected = "";
-      $card.css("opacity", "1");
       $money.css("opacity", "1");
     } else if (!precoGeral) {
       $moneyChangeValue.css("border", "1px solid red");
