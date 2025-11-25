@@ -49,6 +49,7 @@ let $adress = $("#adress");
 let $observacao = $("#obs");
 let $clientName = $("#client-name");
 let $cartEmptyMsg = $(".isCartEmpty");
+let $deliveryTime = $(".delivery-time");
 
 // ========================================================
 // 1. INICIALIZAÇÃO PRINCIPAL (SÓ PODE TER UMA DESSA)
@@ -88,7 +89,7 @@ $(document).ready(async function () {
     // 5. Ativa os cliques (SÓ AGORA, pois o menu já existe)
     listeners();
     if(configsLojaGlobal[0].status != "Aberto") {
-      $statusMessage.text(configsLojaGlobal[0].mensagem_loja_fechada);;
+      $statusMessage.text(configsLojaGlobal[0].mensagem_loja_fechada ? configsLojaGlobal[0].mensagem_loja_fechada : "A loja está fechada no momento.");;
       $statusContainer.show();
     }
     $mainContainer.show();
@@ -108,6 +109,7 @@ function fillMenu(produtosPorCategoria) {
   // Segurança: se não tiver dados, para a função para não dar erro
   if (!produtosPorCategoria) return;
 
+  console.log(produtosPorCategoria);
   $menuContainer.empty();
 
   for (const nomeDaCategoria in produtosPorCategoria) {
@@ -125,7 +127,8 @@ function fillMenu(produtosPorCategoria) {
         produto.nome,
         produto.preco,
         produto.id,
-        produto.descricao
+        produto.descricao,
+        produto.disponibilidade
       );
       $gridDeProdutos.append($cardProduto);
     });
@@ -133,11 +136,18 @@ function fillMenu(produtosPorCategoria) {
     $containerCategoria.append($tituloCategoria);
     $containerCategoria.append($gridDeProdutos);
     $menuContainer.append($containerCategoria);
+
+    $deliveryTime.text(`Tempo de entrega: ${configsLojaGlobal[0].tempo_minimo_de_entrega_em_minutos} - ${configsLojaGlobal[0].tempo_maximo_de_entrega_em_minutos} minutos`);
   }
   console.log("Produtos adicionados visualmente na tela.");
 }
 
-function setUpProductCard(imagem, nome, preco, id, descricao) {
+function setUpProductCard(imagem, nome, preco, id, descricao, disponibilidade) {
+  let disponivel;
+  if (disponibilidade == "Disponível") {
+    disponivel = true;
+  }
+  console.log(disponivel);
   let productCardHtml = `<span class="product">
               <span><img class="product-image" src="${imagem}" alt="${nome}"/></span>
               <span class="product-name">${nome}</span>
@@ -150,8 +160,17 @@ function setUpProductCard(imagem, nome, preco, id, descricao) {
                 <span class="product-information-btn" data-id="${id}">Mais informações</span>
               </span>
             </span>`;
-  return $(productCardHtml);
-}
+
+  let productCardHtmlIndisponivel = `<span class="product">
+              <span><img class="product-image" src="${imagem}" alt="${nome}"/></span>
+              <span class="product-name">${nome}</span>
+              <span class="product-price">R$ ${preco
+                .toFixed(2)
+                .replace(".", ",")}</span>
+              <span><button class="addToCart-button" data-id="${id}" style="color: white; background-color: #777; pointer-events: none;">Indisponível</button></span>`
+
+                return disponivel ? productCardHtml : productCardHtmlIndisponivel;
+            }
 
 // ========================================================
 // FUNÇÕES DE LÓGICA E LISTENERS
