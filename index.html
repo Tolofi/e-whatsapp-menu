@@ -11,217 +11,224 @@
     <script type="module" src="index.js" defer></script>
   </head>
   <body>
-    <div class="card-select">
-      <span class="select-card-label">Modalidade</span>
-      <button class="payment-button" id="credit">Crédito</button>
-      <button class="payment-button" id="debit">Débito</button>
-    </div>
-    <div class="money-change-message">
-      <span class="money-change-text">Troco </span>
-      <input type="number" id="money-change-input" />
-      <button id="money-change-confirm-btn">Ok</button>
-      <button id="money-change-confirm-btn-negative">
-        Não preciso de troco
-      </button>
-    </div>
-    <div class="cart-float-button">
-      <img class="cart-icon" src="source/shopping-cart.png" alt="" />
-    </div>
-
-    <span class="alert"></span>
     <div div class="navBar">
       <span class="navBar-links" id="inicio">Início</span>
       <span><img id="logo" src="source/logo.png" alt="logo" /></span>
       <span class="navBar-links"
-        ><a class="link" href="https://wa.me/5532998154975" target="_blank"
-          >Contato</a
-        ></span
+      ><a class="link" href="https://wa.me/5532998154975" target="_blank"
+      >Contato</a
+      ></span
       >
     </div>
-    <div class="buy-container">
-      <div class="back-cart-float-button" id="back-cart-button">
-        <img class="cart-icon" src="source/back.png" alt="" />
+    <span class="loader"></span>
+    <div class="main-container">
+      
+      <div class="card-select">
+        <span class="select-card-label">Modalidade</span>
+        <button class="payment-button" id="credit">Crédito</button>
+        <button class="payment-button" id="debit">Débito</button>
       </div>
-      <span class="cart-title">Carrinho</span>
-
-      <span class="cart-subtitle">Itens</span>
-      <div class="cart-items">
-        <span class="isCartEmpty">O carrinho está vazio. Adicione alguns itens!</span>
-        <!-- <div class="cart-product-layout">
-          <div class="product-info">
-            <span class="cart-product-name">X-Tudinho</span>
-            <span class="cart-product-price"><span>R$ 2,00</span> <span>(R$ 4,00 x 2)</span></span>
+      <div class="money-change-message">
+        <span class="money-change-text">Troco </span>
+        <input type="number" id="money-change-input" />
+        <button id="money-change-confirm-btn">Ok</button>
+        <button id="money-change-confirm-btn-negative">
+          Não preciso de troco
+        </button>
+      </div>
+      <div class="cart-float-button">
+        <img class="cart-icon" src="source/shopping-cart.png" alt="" />
+      </div>
+  
+      <span class="alert"></span>
+      <div class="status">
+        <span class="status-message">A loja está fechada no momento.</span>
+      </div>
+      <div class="buy-container">
+        <div class="back-cart-float-button" id="back-cart-button">
+          <img class="cart-icon" src="source/back.png" alt="" />
+        </div>
+        <span class="cart-title">Carrinho</span>
+  
+        <span class="cart-subtitle">Itens</span>
+        <div class="cart-items">
+          <span class="isCartEmpty">O carrinho está vazio. Adicione alguns itens!</span>
+          <!-- <div class="cart-product-layout">
+            <div class="product-info">
+              <span class="cart-product-name">X-Tudinho</span>
+              <span class="cart-product-price"><span>R$ 2,00</span> <span>(R$ 4,00 x 2)</span></span>
+            </div>
+  
+            <div class="product-controls">
+              <button class="control-btn remove-qty">-</button>
+              <span class="cart-product-qty">2</span>
+              <button class="control-btn add-qty">+</button>
+              <button class="control-btn remove-item">x</button>
+            </div>
+          </div> -->
+        </div>
+        <span class="cart-subtitle">Observações</span>
+        <textarea type="textbox" rows="3" id="obs" placeholder="..."></textarea>
+        <span class="cart-subtitle">Pagamento</span>
+        <div class="payment-methods">
+          <span id="card">Cartão</span>
+          <span id="money">Dinheiro</span>
+          <span id="pix">Pix</span>
+        </div>
+        <span>
+          <span class="cart-subtitle"> Endereço </span>
+          <div>
+            <input type="text" class="adress" id="adress" />
           </div>
-
-          <div class="product-controls">
-            <button class="control-btn remove-qty">-</button>
-            <span class="cart-product-qty">2</span>
-            <button class="control-btn add-qty">+</button>
-            <button class="control-btn remove-item">x</button>
+        </span>
+        <span>
+          <span class="cart-subtitle"> Cliente </span>
+          <div>
+            <input type="text" class="adress" id="client-name" />
           </div>
-        </div> -->
+        </span>
+        <span class="change"></span>
+        <div class="order-price">
+          <div class="order-line">
+            <span class="cart-subtotal" class="secondary-final-lable"
+              >Subtotal</span
+            ><span class="secondary-final-price" id="subtotal-price-value">
+              R$ 0,00</span
+            >
+          </div>
+          <div class="order-line">
+            <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
+            <span class="secondary-final-price" id="delivery-price">
+              R$ 0,00</span
+            >
+          </div>
+          <div class="order-line">
+            <span id="cart-total" class="final-price">Total </span
+            ><span
+              class="secondary-final-price final-price"
+              id="final-price-value"
+              >R$ 0,00</span
+            >
+          </div>
+        </div>
+        <span class="finish-button-container">
+          <span class="cart-finish-button"
+            >Finalizar<img
+              class="cart-finish-wpp-logo"
+              src="source/whatsapp-logo-branca.png"
+          /></span>
+          <button class="add-more-items-btn">Adicionar mais itens</button>
+        </span>
+        <span class="final-advice"
+          >Ao ser redirecionado para o whatsapp, apenas envie a mensagem já
+          escrita.</span
+        >
       </div>
-      <span class="cart-subtitle">Observações</span>
-      <textarea type="textbox" rows="3" id="obs" placeholder="..."></textarea>
-      <span class="cart-subtitle">Pagamento</span>
-      <div class="payment-methods">
-        <span id="card">Cartão</span>
-        <span id="money">Dinheiro</span>
-        <span id="pix">Pix</span>
-      </div>
-      <span class="change"></span>
-      <span>
-        <span class="cart-subtitle"> Endereço </span>
-        <div>
-          <input type="text" class="adress" id="adress" />
-        </div>
-      </span>
-      <span>
-        <span class="cart-subtitle"> Cliente </span>
-        <div>
-          <input type="text" class="adress" id="client-name" />
-        </div>
-      </span>
-      <div class="order-price">
-        <div class="order-line">
-          <span class="cart-subtotal" class="secondary-final-lable"
-            >Subtotal</span
-          ><span class="secondary-final-price" id="subtotal-price-value">
-            R$ 0,00</span
-          >
-        </div>
-        <div class="order-line">
-          <span id="cart-delivery" class="secondary-final-lable">Entrega</span>
-          <span class="secondary-final-price" id="delivery-price">
-            R$ 0,00</span
-          >
-        </div>
-        <div class="order-line">
-          <span id="cart-total" class="final-price">Total </span
-          ><span
-            class="secondary-final-price final-price"
-            id="final-price-value"
-            >R$ 0,00</span
-          >
-        </div>
-      </div>
-      <span class="finish-button-container">
-        <span class="cart-finish-button"
-          >Finalizar<img
-            class="cart-finish-wpp-logo"
-            src="source/whatsapp-logo-branca.png"
-        /></span>
-        <button class="add-more-items-btn">Adicionar mais itens</button>
-      </span>
-      <span class="final-advice"
-        >Ao ser redirecionado para o whatsapp, apenas envie a mensagem já
-        escrita.</span
-      >
-    </div>
-    <div class="menu-container">
-      <!-- <span class="class-span" data-id="">
-        <span class="class-title">Premium</span>
-        <span class="product-line">
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span class="product-name">Egg x bacon</span>
-            <span class="product-price">R$ 30,00</span>
-            <span
-              ><button class="addToCart-button" product="1">
-                Adicionar ao carrinho
-              </button></span
-            ><span class="product-information">
-              <span class="product-information-btn">Mais informações</span>
+      <div class="menu-container">
+        <!-- <span class="class-span" data-id="">
+          <span class="class-title">Premium</span>
+          <span class="product-line">
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span class="product-name">Egg x bacon</span>
+              <span class="product-price">R$ 30,00</span>
+              <span
+                ><button class="addToCart-button" product="1">
+                  Adicionar ao carrinho
+                </button></span
+              ><span class="product-information">
+                <span class="product-information-btn">Mais informações</span>
+              </span>
+            </span>
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span>Egg x bacon</span>
+              <span
+                ><button class="addToCart-button" product="">
+                  Adicionar ao carrinho
+                </button></span
+              >
+            </span>
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span>Egg x bacon</span>
+              <span
+                ><button class="addToCart-button" product="">
+                  Adicionar ao carrinho
+                </button></span
+              >
             </span>
           </span>
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span>Egg x bacon</span>
-            <span
-              ><button class="addToCart-button" product="">
-                Adicionar ao carrinho
-              </button></span
-            >
-          </span>
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span>Egg x bacon</span>
-            <span
-              ><button class="addToCart-button" product="">
-                Adicionar ao carrinho
-              </button></span
-            >
-          </span>
-        </span>
-        <span class="product-line">
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span>Egg x bacon</span>
-            <span
-              ><button class="addToCart-button" product="">
-                Adicionar ao carrinho
-              </button></span
-            >
-          </span>
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span>Egg x bacon</span>
-            <span
-              ><button class="addToCart-button" product="">
-                Adicionar ao carrinho
-              </button></span
-            >
-          </span>
-          <span class="product">
-            <span
-              ><img class="product-image" src="/source/hamburger.png" alt=""
-            /></span>
-            <span>Egg x bacon</span>
-            <span
-              ><button class="addToCart-button" product="">
-                Adicionar ao carrinho
-              </button></span
-            >
+          <span class="product-line">
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span>Egg x bacon</span>
+              <span
+                ><button class="addToCart-button" product="">
+                  Adicionar ao carrinho
+                </button></span
+              >
+            </span>
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span>Egg x bacon</span>
+              <span
+                ><button class="addToCart-button" product="">
+                  Adicionar ao carrinho
+                </button></span
+              >
+            </span>
+            <span class="product">
+              <span
+                ><img class="product-image" src="/source/hamburger.png" alt=""
+              /></span>
+              <span>Egg x bacon</span>
+              <span
+                ><button class="addToCart-button" product="">
+                  Adicionar ao carrinho
+                </button></span
+              >
+            </span>
           </span>
         </span>
-      </span>
-      <span class="class-span">
-        <span class="class-title">(classe)</span>
-        <span class="product-line">
-          <span>(produto)</span>
-          <span>(produto)</span>
-          <span>(produto)</span>
+        <span class="class-span">
+          <span class="class-title">(classe)</span>
+          <span class="product-line">
+            <span>(produto)</span>
+            <span>(produto)</span>
+            <span>(produto)</span>
+          </span>
+          <span class="product-line">
+            <span>(produto)</span>
+            <span>(produto)</span>
+            <span>(produto)</span>
+          </span>
         </span>
-        <span class="product-line">
-          <span>(produto)</span>
-          <span>(produto)</span>
-          <span>(produto)</span>
-        </span>
-      </span>
-      <span class="class-span">
-        <span class="class-title">(classe)</span>
-        <span class="product-line">
-          <span>(produto)</span>
-          <span>(produto)</span>
-          <span>(produto)</span>
-        </span>
-        <span class="product-line">
-          <span>(produto)</span>
-          <span>(produto)</span>
-          <span>(produto)</span>
-        </span>
-      </span> -->
+        <span class="class-span">
+          <span class="class-title">(classe)</span>
+          <span class="product-line">
+            <span>(produto)</span>
+            <span>(produto)</span>
+            <span>(produto)</span>
+          </span>
+          <span class="product-line">
+            <span>(produto)</span>
+            <span>(produto)</span>
+            <span>(produto)</span>
+          </span>
+        </span> -->
+      </div>
+      <div class="footer">Site por: <a href="#" id="footerLink">Tolofi Cardápio Online</a></div>
     </div>
-    <div class="footer">Site por: <a href="#" id="footerLink">Tolofi Cardápio Online</a></div>
   </body>
 </html>

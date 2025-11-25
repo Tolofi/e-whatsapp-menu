@@ -1,9 +1,10 @@
-import { carregarMenuCompleto } from "./data.js";
+import { carregarMenuCompleto, carregarConfigs } from "./data.js";
 
 // --- VARIÁVEIS GLOBAIS ---
 let cardapioGlobal = {}; // IMPORTANTE: Variável global para os listeners verem os produtos
-const frete = 4;
+let configsLojaGlobal = [];
 let change = 0;
+let frete = 0;
 let precoGeral = 0;
 let paymentSelected = "";
 let orderResumeMessage = "";
@@ -18,6 +19,10 @@ let fullOrderObject = {
 
 // --- SELETORES JQUERY ---
 let $buyCart = $(".buy-container");
+let $mainContainer = $(".main-container");
+let $loader = $(".loader");
+let $statusMessage = $(".status-message");
+let $statusContainer = $(".status");
 let $menuContainer = $(".menu-container");
 let $alertBox = $(".alert");
 let $cartButton = $(".cart-float-button");
@@ -50,10 +55,24 @@ let $cartEmptyMsg = $(".isCartEmpty");
 // ========================================================
 $(document).ready(async function () {
   console.log("Iniciando app...");
-
   try {
     // 1. Busca os dados (espera baixar da planilha)
     const dadosBaixados = await carregarMenuCompleto();
+    const configsLoja = await carregarConfigs();
+
+    console.log(configsLoja);
+    configsLojaGlobal = configsLoja;
+    frete =
+      configsLoja[0].frete_em_reais != null
+        ? configsLoja[0].frete_em_reais
+        : frete;
+    frete = parseFloat(frete); // Garante que frete seja um número antes de usar toFixed()
+    console.log(frete);
+    console.log(configsLojaGlobal[0].status); // Corrigido para acessar o primeiro elemento do array
+
+    $("#delivery-price").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
+    console.log(frete + "/" + $("#delivery-price").text());
+    $("#final-price-value").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
 
     // 2. Salva na variável global para os botões de adicionar funcionarem depois
     cardapioGlobal = dadosBaixados;
@@ -64,8 +83,17 @@ $(document).ready(async function () {
     // 4. Carrega dados do usuário (nome/endereço salvos)
     loadUserData();
 
+    loadCartFromStorage();
+
     // 5. Ativa os cliques (SÓ AGORA, pois o menu já existe)
     listeners();
+    if(configsLojaGlobal[0].status != "Aberto") {
+      $statusMessage.text(configsLojaGlobal[0].mensagem_loja_fechada);;
+      $statusContainer.show();
+    }
+    $mainContainer.show();
+    $loader.hide();
+    console.log("App iniciado com sucesso.");
   } catch (error) {
     console.error("Erro fatal ao carregar menu:", error);
     alert("Erro ao carregar o cardápio. Verifique sua conexão.");
@@ -100,7 +128,6 @@ function fillMenu(produtosPorCategoria) {
         produto.descricao
       );
       $gridDeProdutos.append($cardProduto);
-      console.log($gridDeProdutos.html());
     });
 
     $containerCategoria.append($tituloCategoria);
@@ -131,9 +158,13 @@ function setUpProductCard(imagem, nome, preco, id, descricao) {
 // ========================================================
 
 function listeners() {
-  // ADICIONAR AO CARRINHO
   $menuContainer.on("click", ".addToCart-button", function () {
     const idDoProdutoClicado = $(this).data("id");
+
+    if (configsLojaGlobal[0].status !== "Aberto") {
+      showAlert("A loja está fechada no momento.", "#f44336");
+      return;
+    }
 
     // Usa a variável GLOBAL cardapioGlobal
     for (let categoria in cardapioGlobal) {
@@ -153,6 +184,7 @@ function listeners() {
           itemExistenteNoCarrinho.qtd += 1;
           updateCartPriceState();
           updateCartProductState(itemExistenteNoCarrinho.id);
+          saveCartToStorage();
           showAlert("Quantidade aumentada no carrinho!", "#4BB543");
         } else {
           // Cria um novo objeto para não alterar o original do menu
@@ -160,6 +192,7 @@ function listeners() {
           cart.push(novoItemCarrinho);
 
           updateCartPriceState();
+          saveCartToStorage();
           showAlert("Item adicionado ao carrinho!", "#4BB543");
 
           // Renderiza o item no carrinho visualmente
@@ -173,6 +206,10 @@ function listeners() {
 
   // Outros listeners...
   $cartButton.on("click", function () {
+    if (configsLojaGlobal[0].status !== "Aberto") {
+      showAlert("A loja está fechada no momento.", "#f44336");
+      return;
+    }
     showCart();
     if (cart.length > 0) {
       $cartEmptyMsg.empty();
@@ -206,7 +243,7 @@ function listeners() {
   $cartItemsContainer.on("click", ".remove-item", function () {
     const id = $(this).data("id");
     removeItem(id);
-    if(cart.length === 0){
+    if (cart.length === 0) {
       $cartEmptyMsg.text("O carrinho está vazio. Adicione alguns itens!");
     }
   });
@@ -268,7 +305,6 @@ function listeners() {
       $moneyChangeValue.val("");
       $moneyChangeValue.attr("placeholder", "Adicione um produto antes.");
       paymentSelected = "";
-      $card.css("opacity", "1");
       $money.css("opacity", "1");
     } else if (parseFloat($moneyChangeValue.val()) <= precoGeral) {
       $moneyChangeValue.css("border", "1px solid red");
@@ -278,7 +314,6 @@ function listeners() {
         "O troco deve ser maior que o preço."
       );
       paymentSelected = "";
-      $card.css("opacity", "1");
       $money.css("opacity", "1");
     } else {
       change = parseFloat($moneyChangeValue.val().trim().replace(",", "."));
@@ -339,9 +374,6 @@ function listeners() {
   $cartFinishButton.on("click", function () {
     finishOrderObject();
   });
-
-  $("#delivery-price").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
-  $("#final-price-value").text(`R$ ${frete.toFixed(2).replace(".", ",")}`);
 }
 
 // Helper para desenhar o item no carrinho (extraída do código original para organização)
@@ -440,6 +472,7 @@ function increaseItem(id) {
     currentProduct.qtd++;
     updateCartProductState(id);
     updateCartPriceState();
+    saveCartToStorage();
   }
 }
 
@@ -453,6 +486,7 @@ function decreaseItem(id) {
     }
     updateCartProductState(id);
     updateCartPriceState();
+    saveCartToStorage();
   }
 }
 
@@ -468,6 +502,7 @@ function removeItem(id) {
   $money.css("opacity", "1");
   $moneyChangeValue.val("").hide();
   updateCartPriceState();
+  saveCartToStorage();
 }
 
 function showAlert(message, color) {
@@ -542,4 +577,44 @@ function redirectUser() {
     orderResumeMessage
   )}`;
   window.open(urlCompleta, "_blank");
+  clearCartStorage();
+  location.reload();
+}
+
+function saveCartToStorage() {
+  // Salva o estado atual do carrinho no navegador
+  localStorage.setItem("shoppingCart", JSON.stringify(cart));
+}
+
+function loadCartFromStorage() {
+  const savedCart = localStorage.getItem("shoppingCart");
+  
+  if (savedCart) {
+    // 1. Converte texto de volta para Objeto
+    const parsedCart = JSON.parse(savedCart);
+    
+    // 2. Se tiver itens, restaura
+    if (parsedCart.length > 0) {
+      cart = parsedCart; // Atualiza a variável global
+      
+      // 3. Renderiza visualmente cada item recuperado
+      cart.forEach(item => {
+        renderCartItem(item); // Essa função já existe no seu código e cria o HTML
+        updateCartProductState(item.id); // Atualiza os textos de qtd e preço
+      });
+
+      // 4. Atualiza totais e esconde msg de vazio
+      updateCartPriceState();
+      $cartEmptyMsg.empty(); // Remove msg de "carrinho vazio"
+      
+      console.log("Carrinho restaurado com sucesso:", cart);
+    }
+  }
+}
+
+function clearCartStorage() {
+  // Chamaremos isso APENAS quando for pro WhatsApp
+  localStorage.removeItem("shoppingCart");
+  // Opcional: Limpar a variável local também se quiser resetar a tela sem reload
+  // cart = []; 
 }
