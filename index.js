@@ -167,7 +167,12 @@ function setUpProductCard(imagem, nome, preco, id, descricao, disponibilidade) {
               <span class="product-price">R$ ${preco
                 .toFixed(2)
                 .replace(".", ",")}</span>
-              <span><button class="addToCart-button" data-id="${id}" style="color: white; background-color: #777; pointer-events: none;">Indisponível</button></span>`
+              <span><button class="addToCart-button" data-id="${id}" style="color: white; background-color: #777; pointer-events: none;">Indisponível</button></span>
+              <span class="product-information">
+                <span class="product-description">${descricao}</span>
+                <span class="product-information-btn" data-id="${id}">Mais informações</span>
+              </span>
+              </span> `
 
                 return disponivel ? productCardHtml : productCardHtmlIndisponivel;
             }
