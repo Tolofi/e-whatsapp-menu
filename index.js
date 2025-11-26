@@ -595,7 +595,7 @@ Frete: R$ ${frete.toFixed(2).replace(".", ",")}
 }
 
 function redirectUser() {
-  const numeroTelefone = "5519998964995";
+  const numeroTelefone = `55${configsLojaGlobal[0].numero_de_whatsapp}`;
   const urlBase = "https://api.whatsapp.com/send";
   const urlCompleta = `${urlBase}?phone=${numeroTelefone}&text=${encodeURIComponent(
     orderResumeMessage
