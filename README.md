@@ -39,6 +39,8 @@ Um sistema de cardápio digital front-end simples, permitindo que clientes adici
 
 ---
 
-## 🔹 Estrutura do projeto
-
+## - Estrutura do projeto
+- `index.html`/`style.css` - Responsáveis pela parte visual do site.
+- `data.js` - Funções auxiliares responsáveis por manusear dados vindos da planilha.
+- `index.js` - Responsável pela lógica do site, isso inclui lógica do carrinho, renderização dinâmica do cardápio, armazenamento dos dados do cliente no local storage, formatação e envio do pedido formatada via api do WhatsApp. 
 
