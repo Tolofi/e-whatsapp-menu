@@ -99,4 +99,4 @@ Sinta-se à vontade para abrir uma **Issue** relatando problemas com a formataç
 - [ ] Adição de opções de variações de produtos (tamanho, adicionais).
 - [ ] Integração com APIs de pagamento (opcional).
 
-### Desenvolvido por [Seu Nome].
+### Desenvolvido por Tolofi.
