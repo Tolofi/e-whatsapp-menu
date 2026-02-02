@@ -1,3 +1,9 @@
+<div align="right">
+  <a href="README.en.md">
+    <img src="https://img.shields.io/badge/Read_in_English-USA?style=for-the-badge&logo=us&logoColor=white">
+  </a>
+</div>
+
 # 1. Cardápio Digital (Envio via WhatsApp)
 
 > Um sistema de cardápio digital front-end simples, permitindo que clientes adicionem produtos ao carrinho, preencham seus dados e enviem o pedido diretamente via WhatsApp.
